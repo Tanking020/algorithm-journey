@@ -17,8 +17,8 @@ def random_arr(size,low,high):
 def px_maopao(arr):
     """
     冒泡排序函数：对列表进行从小到大的冒泡排序
-
     时间复杂度:O(N^2)
+    稳定
 
     arr:需要排序的列表
 

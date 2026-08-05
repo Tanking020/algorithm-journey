@@ -1,10 +1,12 @@
 # 归并排序
 """
-归并排序算法
+(伪)归并排序算法(len + 切片版)——分治思想,先拆后合
     核心关键点:
         1:递归的 base case (递归的终止条件) 是len(arr) <= 1,当然也可以用l(左边界索引)==r(右边界索引)
         2:合并时用双指针
         3:需要额外的临时数组(返回新数组而不是原地修改)
+
+空间复杂度更低的"真·归并排序算法"可参考question_xiaohe.py
 """
 
 import random
@@ -24,7 +26,11 @@ def random_arr_float(size,low,high,ndigits):
 
 def px_guibing_sort(arr):
     """
-    递归拆分和排序将数组递归拆分为最小单元(子问题),再通过px_guibing_merge(也就是下面的合并函数)逐层合并为有序数组
+    (伪)归并排序算法(len + 切片版)：递归拆分和排序将数组递归拆分为最小单元(子问题),再通过px_guibing_merge(也就是下面的合并函数)逐层合并为有序数组
+    时间复杂度:O(nlogn) _没有浪费比较行为_
+    原算法额外空间复杂度:O(N) _空间换时间_ 每次申请空间后又释放掉了,最多只需要申请一个长度为N的空间
+    在本文档中为方便理解使用了基于长度(len,而非边界索引l与r)+切片(切片操作必定产生新列表而非原地修改)的方法,实际额外空间复杂度:O(NlogN)
+    稳定
 
     arr:待归并排序的列表
     
@@ -35,7 +41,7 @@ def px_guibing_sort(arr):
     
     mid = len(arr)//2
     left = px_guibing_sort(arr[:mid])
-    right = px_guibing_sort(arr[mid:])
+    right = px_guibing_sort(arr[mid:]) # 创建新数组而不是原地修改,导致空间复杂度上升到O(NlogN)
 
     return px_guibing_merge(left,right)
 
