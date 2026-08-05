@@ -31,7 +31,7 @@ def px_charu(arr):
             arr[j+1] = arr[j] # 也就是说：从第i元素（key）往左逐个看谁比key大，把比key大的往右挪一格
             j -= 1 # 在每个i的讨论中while遍历其左侧所有元素（事实上 j -= 1 是while循环经典操作，注意理解即可）
             # 最后j到达已排序区边界时内层循环结束
-        arr[j+1] = key
+        arr[j+1] = key # while 结束后，j+1 就是 key 的正确插入位置
 
 if __name__ == '__main__':
     arr = random_arr(10,0,100)
