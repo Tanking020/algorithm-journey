@@ -17,7 +17,9 @@ def px_guibing_sort_pre(arr):
     n = len(arr)
     if n <= 1:
         return # 单个元素天然有序，无需返回
-    help_arr = [0] * n # 核心:全局只分配一次辅助数组，所有递归层复用 _注意这只是局部变量,函数结束后被销毁_
+    help_arr = [0] * n # 核心:全局只分配一次辅助数组，所有递归层复用 _注意这只是局部变量_ 
+    # help_arr 不会在 merge 结束时销毁，它在整个排序期间被反复复用
+    # 真正的销毁发生在 px_guibing_sort_pre 返回之后
 
     px_guibing_sort(arr,0,n-1,help_arr) # 核心:这句话将局部变量传入了主函数(传参)
 
@@ -86,6 +88,6 @@ def px_guibing_merge_pre(arr,l,mid,r,help_arr):
 
 if __name__ == '__main__':
     arr = random_arr(10,0,100)
-    print(arr)
+    print("待归并排序数组:",arr)
     px_guibing_sort_pre(arr)
-    print(arr)
+    print("归并排序后数组:",arr)
