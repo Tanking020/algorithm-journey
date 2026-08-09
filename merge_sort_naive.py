@@ -24,7 +24,7 @@ def random_arr_float(size,low,high,ndigits):
     """
     return [round(random.uniform(low,high),ndigits) for _ in range(size)] # 利用round(number,ndigits)函数_对数字进行四舍五入，保留指定的小数位数_
 
-def px_guibing_sort(arr):
+def merge_sort_naive(arr):
     """
     (伪)归并排序算法(len + 切片版)：递归拆分和排序将数组递归拆分为最小单元(子问题),再通过px_guibing_merge(也就是下面的合并函数)逐层合并为有序数组
     时间复杂度:O(nlogn) _没有浪费比较行为_
@@ -40,12 +40,12 @@ def px_guibing_sort(arr):
         return arr
     
     mid = len(arr)//2
-    left = px_guibing_sort(arr[:mid])
-    right = px_guibing_sort(arr[mid:]) # 创建新数组而不是原地修改,导致空间复杂度上升到O(NlogN)
+    left = merge_sort_naive(arr[:mid])
+    right = merge_sort_naive(arr[mid:]) # 创建新数组而不是原地修改,导致空间复杂度上升到O(NlogN)
 
-    return px_guibing_merge(left,right)
+    return merge_naive(left,right)
 
-def px_guibing_merge(left,right):
+def merge_naive(left,right):
     """
     合并函数:给归并排序函数用的工具函数,无需由用户主动调用
 
@@ -76,5 +76,5 @@ def px_guibing_merge(left,right):
 if __name__ == '__main__':
     arr = random_arr_float(10,0.0,100.0,2)
     print("归并排序前的列表:",arr)
-    result = px_guibing_sort(arr)
+    result = merge_sort_naive(arr)
     print("归并排序后的列表:",result)

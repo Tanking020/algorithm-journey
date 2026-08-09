@@ -14,7 +14,7 @@ def random_arr(size,low,high):
     """
     return [random.randint(low,high) for _ in range(size)]
 
-def px_charu(arr):
+def heap_sort(arr):
     """
     插入排序算法
     把新元素插入到_已排序区_的合适位置
@@ -38,5 +38,5 @@ def px_charu(arr):
 if __name__ == '__main__':
     arr = random_arr(10,0,100)
     print("插入排序前列表：",arr)
-    px_charu(arr)
+    heap_sort(arr)
     print("插入排序后列表",arr)

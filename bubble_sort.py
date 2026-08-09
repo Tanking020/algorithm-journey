@@ -14,7 +14,7 @@ def random_arr(size,low,high):
     """
     return [random.randint(low,high) for _ in range(size)]
 
-def px_maopao(arr):
+def bubble_sort(arr):
     """
     冒泡排序函数：对列表进行从小到大的冒泡排序
     时间复杂度:O(N^2)
@@ -39,7 +39,7 @@ if __name__ == '__main__':
     arr1 = random_arr(10,0,100)
     print("冒泡排序前列表：",arr1)
 
-    px_maopao(arr1)
+    bubble_sort(arr1)
     print("冒泡排序后列表：",arr1)
 
 # 原地修改和返回新数组只能二选一 我的旧代码中犯了既原地修改又返回新数组的谬误 后改成了原地修改 

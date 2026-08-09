@@ -16,7 +16,7 @@ version3:
 """
 
 import random
-from px_guibing_pre import px_guibing_sort_pre
+from merge_sort import px_guibing_sort_pre
 
 def random_arr(size,low,high):
     """
@@ -32,7 +32,7 @@ def random_arr(size,low,high):
     """
     return [random.randint(low,high) for _ in range(size)]
 
-def px_kuaipai_partition(arr,l,r):
+def quick_sort(arr,l,r):
     """
     随机pivot的三路快速排序算法(三指针协同操作)
 
@@ -67,15 +67,15 @@ def px_kuaipai_partition(arr,l,r):
             p2 -= 1 # 在这个情况中交换后 i 不动,因为交换过来的值还没检查
 
     # 划分结束后 [p1, p2] 区间内的元素已经全部 == pivot,处于最终正确位置,不需要也不应该再参与递归.如果传入 p1 和 p2,等于区的元素会被反复纳入递归,当所有元素都相等时就会无限递归导致栈溢出.
-    px_kuaipai_partition(arr,l,p1 - 1) # 在写代码中始终都要注意边界不要写错!!!
-    px_kuaipai_partition(arr,p2 + 1,r) # 注意这个操作很重要,它通过使用左右边界索引 + 改变函数参数的方式让我们能原地修改数组中的片段而不使用切片(切片操作会创建新副本而不是原地修改)
+    quick_sort(arr,l,p1 - 1) # 在写代码中始终都要注意边界不要写错!!!
+    quick_sort(arr,p2 + 1,r) # 注意这个操作很重要,它通过使用左右边界索引 + 改变函数参数的方式让我们能原地修改数组中的片段而不使用切片(切片操作会创建新副本而不是原地修改)
 
-def px_test(size,low,high):
+def test(size,low,high):
     """
     随机pivot的三路快速排序算法(三指针协同操作)测试函数
     排序正确性验证使用:预处理+原地修改的归并算法
 
-    目前的 px_test 既负责验证又负责打印。如果后续要跑100次计时测试,控制台会被大量输出淹没.后续想优化可以将验证和展示分离.
+    目前的 test 既负责验证又负责打印。如果后续要跑100次计时测试,控制台会被大量输出淹没.后续想优化可以将验证和展示分离.
     后续也当补上不同规模下的数组排序测试用例,并通过多次时间测试验证快速排序和归并排序的速度.
 
     Args:
@@ -92,7 +92,7 @@ def px_test(size,low,high):
     arr_test = arr.copy() # 注意!!!列表是可变对象,用别的变量名去等于它只会给他起别名!!!要执行检验必须创建副本传递给新变量名
     print("待排序数组:",arr)
 
-    px_kuaipai_partition(arr,0,len(arr) - 1)
+    quick_sort(arr,0,len(arr) - 1)
     print("使用随机pivot的快速排序后的数组:",arr)
     
     px_guibing_sort_pre(arr_test)
@@ -100,4 +100,4 @@ def px_test(size,low,high):
     print("快速排序结果正确!" if arr == arr_test else "快速排序结果错误!")
 
 if __name__ == '__main__':
-    px_test(1000,0,100)
+    test(1000,0,100)

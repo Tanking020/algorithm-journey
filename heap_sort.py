@@ -26,10 +26,10 @@ heapify:向下和大儿子对比
 
 import random
 
-from px_maopao import random_arr
-from px_guibing_pre import px_guibing_sort_pre
+from bubble_sort import random_arr
+from merge_sort import px_guibing_sort_pre
 
-def px_heap_insert(arr):
+def heap_insert(arr):
     """
     工具函数:使用逐个插入上浮法将数组排成一个大根堆
     建堆复杂度：O(NlogN)(不够好，已替换为floyd方法)
@@ -49,7 +49,7 @@ def px_heap_insert(arr):
             arr[i],arr[(i-1)//2] = arr[(i-1)//2],arr[i]
             i = (i-1)//2 # 使用 for 循环遍历数组元素，嵌套 while 条件循环对每个遍历到的元素执行不断交换上浮直到满足条件的操作
 
-def px_heap_floyd(arr):
+def heap_floyd(arr):
     """
     工具函数:使用floyd方法将数组排成一个大根堆
     建堆复杂度：O(N)
@@ -80,9 +80,9 @@ def px_heap_floyd(arr):
     """
     n = len(arr)
     for i in range(n//2 - 1,-1,-1): # 从下往上，从右往左第一个非叶子节点开始计算，省去对大量叶子节点的操作（叶子节点没有孩子，天然满足大根堆定义）
-        px_heap_heapify(arr,i,n)
+        heap_heapify(arr,i,n)
 
-def px_heap_heapify(arr,index,heap_size):
+def heap_heapify(arr,index,heap_size):
     """
     工具函数:执行单次heapify操作
 
@@ -125,13 +125,14 @@ def px_heap_heapify(arr,index,heap_size):
         arr[index], arr[max_idx] = arr[max_idx], arr[index] # 逗号后加空格， * 号左右都加空格，能提高可读性
         index = max_idx
 
-def px_heap_sort(arr):
+def heap_sort(arr):
     """
     堆排序对外端口
 
     依赖工具函数：
-    px_heap_insert(arr) -> 优化后改为: px_heap_floyd(arr)
-    px_heap_heapify(arr,index,heap_size)
+    heap_insert(arr) -> 优化后改为: heap_floyd
+(arr)
+    heap_heapify(arr,index,heap_size)
 
     Args:
         arr:待排序数组(用户输入的初始数组)
@@ -144,15 +145,15 @@ def px_heap_sort(arr):
         return
 
     heap_size = len(arr)
-    # px_heap_insert(arr) - 优化为floyd建堆
-    px_heap_floyd(arr)
+    # heap_insert(arr) - 优化为floyd建堆
+    heap_floyd(arr)
 
     while heap_size > 1:
         arr[heap_size - 1],arr[0] = arr[0],arr[heap_size - 1] # 注意，排序循环不要每次都重复建堆，把末尾交换上去直接向下条件循环执行heapify
         heap_size -= 1
-        px_heap_heapify(arr,0,heap_size) # 传入参数 index=0 不变，那就直接传入0就可以，避免产生变量名混淆影响维护性
+        heap_heapify(arr,0,heap_size) # 传入参数 index=0 不变，那就直接传入0就可以，避免产生变量名混淆影响维护性
 
-def px_heap_test(size,low,high):
+def heap_test(size,low,high):
     """
     堆排序结果测试函数:
     测试工具:预处理-归并排序函数
@@ -160,7 +161,7 @@ def px_heap_test(size,low,high):
     arr = random_arr(size,low,high)
     print("堆排序前的指定参数随机数组:",arr)
     arr2 = arr.copy()
-    px_heap_sort(arr)
+    heap_sort(arr)
     print("指定随机整数数组arr堆排序后:",arr)
     px_guibing_sort_pre(arr2)
     print("指定随机整数数组arr创建副本并对副本预处理-归并排序后:",arr2)
@@ -168,4 +169,4 @@ def px_heap_test(size,low,high):
     print("堆排序结果与归并排序核验一致!" if arr == arr2 else "堆排序结果与归并排序核验不一致!请校检代码!")
 
 if __name__ == '__main__':
-    px_heap_test(100,0,100)
+    heap_test(100,0,100)

@@ -14,9 +14,9 @@
 """
 
 import random
-from px_maopao import random_arr
+from bubble_sort import random_arr
 
-def xiaohe(arr):
+def small_sum(arr):
     """
     对外接口:返回数组的小和
 
@@ -29,9 +29,9 @@ def xiaohe(arr):
         return 0 # 边界条件处理:此时小和显然为0
 
     # 传入副本,_避免修改调用者的原始数组
-    return xiaohe_guibing_sort(arr.copy(),0,len(arr)-1) # 这里.copy的操作需要加深理解！！！ .copy() 创建浅拷贝，确保归并排序的原地修改不会污染调用者的原始数组
+    return small_sum_recursive(arr.copy(),0,len(arr)-1) # 这里.copy的操作需要加深理解！！！ .copy() 创建浅拷贝，确保归并排序的原地修改不会污染调用者的原始数组
 
-def xiaohe_guibing_sort(arr,l,r):
+def small_sum_recursive(arr,l,r):
     """
     拆分 + 递归 主函数
     返回当前区间内产生的小和
@@ -47,13 +47,13 @@ def xiaohe_guibing_sort(arr,l,r):
  
     mid = l + ((r-l) >> 1) # 位运算优先级低，记得加括号
 
-    left_sum = xiaohe_guibing_sort(arr,l,mid)
-    right_sum = xiaohe_guibing_sort(arr,mid+1,r)
-    cross_sum = xiaohe_guibing_merge(arr,l,mid,r) # 三处可能产生小和的比较场景 (新数组包含的小和 = 左子数组包含的 + 右子数组包含的 + 左右子数组合并时产生的)
+    left_sum = small_sum_recursive(arr,l,mid)
+    right_sum = small_sum_recursive(arr,mid+1,r)
+    cross_sum = small_sum_merge(arr,l,mid,r) # 三处可能产生小和的比较场景 (新数组包含的小和 = 左子数组包含的 + 右子数组包含的 + 左右子数组合并时产生的)
 
     return left_sum + right_sum + cross_sum
 
-def xiaohe_guibing_merge(arr,l,mid,r):
+def small_sum_merge(arr,l,mid,r):
     """
     .append + 边界索引版本归并 合成用工具函数
     版本归并 + 小和累加
@@ -116,7 +116,7 @@ if __name__ == '__main__':
     # 这里不需要写缩进是因为sum的参数是一个表达式而非语句代码块 同样的原因无需打冒号
     """
 
-    result = xiaohe(arr)
+    result = small_sum(arr)
     print("传入数组小和计算的结果:",result)
 
     print(f"检验原数组是否被污染:{arr},若和传入数组一致均未有序,说明最终未修改原数组而是严格执行了.copy副本传入")

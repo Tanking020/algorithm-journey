@@ -1,9 +1,9 @@
 # 选择排序
 
 import random
-from px_maopao import random_arr
+from bubble_sort import random_arr
 
-def px_xuanze(arr):
+def selection_sort(arr):
     """
     选择排序：每次从待排序区选最小的，放到已排序区末尾（交换）。
     时间复杂度:O(n^2)
@@ -26,5 +26,5 @@ def px_xuanze(arr):
 if __name__ == '__main__':
     arr = random_arr(10,0,100)
     print("选择排序前列表:",arr)
-    px_xuanze(arr)
+    selection_sort(arr)
     print("选择排序后列表:",arr)
