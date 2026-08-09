@@ -1,4 +1,6 @@
-# 选择排序
+"""
+选择排序
+"""
 
 import random
 from bubble_sort import random_arr
