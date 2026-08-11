@@ -1,5 +1,8 @@
 """
-计数排序
+计数排序 .extend版本
+可优化为：预分配+索引赋值
+
+计数排序就是桶大小为 1 的桶排序
 
 此模块中的对数器写得比较完善，可以作为以后写对数器的参考
 """
@@ -18,13 +21,15 @@ def counting_sort(arr,min_val,max_val):
         max_val:待排序数组中元素最大值(允许比实际最大值更大但不可更小)
 
     Returns:
-        None:仅原地修改传入数组，过程中使用两个辅助数组但随后就被释放
+        None:仅原地修改传入数组，过程中使用计数数组和结果数组作为辅助空间，函数返回后自动释放
     """
 
+    if not arr: # 对空数组进行防御
+        return
     count_arr = [0] * (max_val - min_val + 1)
 
     for i in range(len(arr)):
-        count_arr[arr[i] - min_val] += 1 # 计数数组 = 类似频域空间
+        count_arr[arr[i] - min_val] += 1 # 计数数组 = 类似频域空间 一定要注意计算偏移量
 
     result_arr = []
 
@@ -35,7 +40,7 @@ def counting_sort(arr,min_val,max_val):
             j += 1
             continue
         else:
-            result_arr.extend([j + min_val] * (count_arr[j]))
+            result_arr.extend([j + min_val] * (count_arr[j])) # .extend思路不错，但是改成预分配思想会更好
             j += 1
 
     for k in range(len(result_arr)):
@@ -53,9 +58,9 @@ def counting_sort_test(min_val,max_val,low,high,test_times):
         test_times:测试次数
 
     Returns:
-        bull:测试结果 打印测试结果，将不一致结果及其测试序号给出
+        bool:测试结果 打印测试结果，将不一致结果及其测试序号给出
     """
-    i = 0
+
     test_result = True
     for i in range(test_times): # 用 for 循环便于维护
         size = random.randint(min_val,max_val) # 使用随机尺寸数组生成，便于检查各类情形
@@ -77,4 +82,4 @@ def counting_sort_test(min_val,max_val,low,high,test_times):
     return test_result # 根据测试结果返回测试通过与否，便于后续其他引用
 
 if __name__ == '__main__':
-    counting_sort_test(0,100,0,100,1000)
+    counting_sort_test(0,100,0,100,1000) # 测试时候要把小尺寸包含进去，特别是 数组长度为 0 这个边界处最容易出问题
