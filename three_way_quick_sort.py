@@ -1,6 +1,9 @@
 """
 随机pivot的三路快速排序算法(三指针协同操作)
 
+虽然时间复杂度与归并排序、桶排序同量级，但是实际上快速排序常数项小，是最快的
+缺陷是不稳定和空间复杂度较高
+
 version1:两路快速排序(小于等于区+大于区,双指针[要与节奏固定的快慢指针法相区分])
 2路快排（标准快排）可以看作是3路快排在“没有重复元素”或“不处理等于pivot元素”时的退化版本。
 version2:三路快速排序(小于区+等于区+大于区),避开了对等于pivot元素的重复判断
@@ -18,7 +21,7 @@ version3:
 """
 
 import random
-from merge_sort import px_guibing_sort_pre
+from merge_sort import merge_sort
 
 def random_arr(size,low,high):
     """

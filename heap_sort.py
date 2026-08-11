@@ -6,6 +6,8 @@
 最坏情况下
 空间复杂度：O（1）
 
+与归并排序及快速排序相比，优势是空间复杂度较低，缺点是不稳定
+
 关键优势：堆排序是少数在最坏情况下仍能保证 O(N log N) 的排序算法。
 快排最坏会退化到 O(N^2)，而堆排序不会。
 
@@ -34,7 +36,7 @@ heapify:向下和大儿子对比
 import random
 
 from bubble_sort import random_arr
-from merge_sort import px_guibing_sort_pre
+from merge_sort import merge_sort
 
 def heap_insert(arr):
     """
