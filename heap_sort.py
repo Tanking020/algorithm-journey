@@ -172,7 +172,7 @@ def heap_test(size,low,high):
     arr2 = arr.copy()
     heap_sort(arr)
     print("指定随机整数数组arr堆排序后:",arr)
-    px_guibing_sort_pre(arr2)
+    merge_sort(arr2)
     print("指定随机整数数组arr创建副本并对副本预处理-归并排序后:",arr2)
     print("经预处理-归并排序检验:")
     print("堆排序结果与归并排序核验一致!" if arr == arr2 else "堆排序结果与归并排序核验不一致!请校检代码!")

@@ -100,7 +100,7 @@ def test(size,low,high):
     quick_sort(arr,0,len(arr) - 1)
     print("使用随机pivot的快速排序后的数组:",arr)
     
-    px_guibing_sort_pre(arr_test)
+    merge_sort(arr_test)
     print("预处理归并排序后的数组:",arr_test)
     print("快速排序结果正确!" if arr == arr_test else "快速排序结果错误!")
 
