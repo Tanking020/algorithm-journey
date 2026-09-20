@@ -16,7 +16,7 @@ class Solution(object):
             return False
 
         from collections import Counter
-        count1 = Counter(s) # 直接统计字符串中各个元素的出现次数，时间复杂度 O(N)
+        count1 = Counter(s) # 直接统计字符串中各个元素的出现次数，时间复杂度 O(N) 返回一个字典{"元素":"出现次数"}
         count2 = Counter(t)
 
         return count1 == count2
