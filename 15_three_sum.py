@@ -4,6 +4,7 @@ class Solution(object):
         :type nums: List[int]
         :rtype: List[List[int]]
         """
+        # 固定一个 + 双指针 注意地位对称性 时间复杂度 O(N^2)
         n = len(nums)
         nums.sort()
         result = []
