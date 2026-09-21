@@ -24,7 +24,7 @@ class Solution(object):
                     # 然后list2.append(list1),那么 list1 重新赋值 ( list1 = [2,2,4]) 的时候，大列表中之前存入的 list1 也会同时被修改
                     # 最后得到的结果将会是 list2 = ([2,2,4],...,[2,2,4])
                     # 非要这么做的话要 .append 副本来避免因重新赋值带来的大列表错误变动
-                    result.append([nums[left], nums[right], nums[i]]) # 所以说干脆不用中间变量名过渡就行了
+                    result.append([nums[i], nums[left], nums[right]]) # 所以说干脆不用中间变量名过渡就行了
 
                     while left < right and nums[left] == nums[left + 1]:
                         left += 1
