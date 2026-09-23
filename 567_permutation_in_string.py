@@ -5,6 +5,11 @@ class Solution(object):
         :type s2: str
         :rtype: bool
         """
+        # 滑动窗口 + formed 满足变量
+        # 时间复杂度：O(N) 空间复杂度：O(M)
+        # leetcode 时间测试不够快，一方面是因为 Counter构建慢，另一方面defaultdict每次访问不存在的键都要走默认逻辑
+        # 不过这并不影响 formed 是一个高效的算法
+        # 如果字符集固定（比如小写字母），可以用长度为 26 的数组替代 defaultdict，速度会快很多
         from collections import Counter, defaultdict
         left = 0
         window = defaultdict(int)
