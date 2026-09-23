@@ -23,7 +23,7 @@ class Solution(object):
             while cur_sum >= target:
                 # 此时都是满足条件的数组，用 min() 边收缩边不断更新结果数组长度
                 result_length = min(right - left + 1, result_length)
-                # left 收缩
+                # left 收缩, 减去移除出窗口的元素
                 cur_sum -= nums[left]
                 left += 1
 
