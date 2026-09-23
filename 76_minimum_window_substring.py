@@ -5,6 +5,8 @@ class Solution(object):
         :type t: str
         :rtype: str
         """
+        # 滑动窗口解法 时间复杂度 O(N) , 空间复杂度 O(M)
+        # 滑动窗口解法核心在理解那个收缩判定 while ，比如 while 满足题目条件时，收缩
         from collections import Counter, defaultdict
 
         # defaultdict: 访问不存在的键时，自动创建并赋默认值( int 类型默认赋 0 )，不会报keyError
