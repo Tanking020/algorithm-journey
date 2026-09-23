@@ -39,6 +39,7 @@ class Solution(object):
                 left += 1
                 window_length -= 1
 
+            # 收缩后子串与目标字符串长度相等且满足变量达标，此时必为异位词
             if formed == len(need_dict): # need_dict 本身就是去重的，无需引入集合
                 result_list.append(left)
 
