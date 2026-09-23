@@ -5,7 +5,7 @@ class Solution(object):
         :type p: str
         :rtype: List[int]
         """
-        # 滑动窗口法
+        # 滑动窗口法 + formed 满足变量使用
         # 时间复杂度 O(N) , 空间复杂度 O(M)
         # 判定异位词的方法很关键，直接 window_dict == need_dict 不行，会因 defaultdict(int) 残存的 0 导致误判
         # 而且就算用 Counter 排除 0 残留也会导致时间复杂度过高
@@ -15,10 +15,10 @@ class Solution(object):
         window_dict = defaultdict(int)
         result_list = []
         need_dict = Counter(p)
-        formed = 0 # 维护满足变量
+        formed = 0 # 满足变量，表示已经满足计数的符号种类数
 
         for right in range(len(s)):
-            # 更新窗口字典)(增)
+            # 更新窗口字典(增)
             window_dict[s[right]] += 1
             # 子串的长度始终都会等于 p 的长度，这是比较关键的
             # 正因为长度始终一致，不可能出现溢出的情况，因此无需对溢出进行判定，只要判定是否满足就行
