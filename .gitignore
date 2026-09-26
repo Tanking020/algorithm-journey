@@ -1,0 +1,23 @@
+# === Python ===
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# === 虚拟环境 ===
+.venv/
+venv/
+env/
+ENV/
+
+# === 编辑器 / 系统 ===
+.DS_Store
+Thumbs.db
+*.swp
+
+# === 个人实验(不属于本算法仓库,仅保留在本地) ===
+PINNs_for_1D_Poisson.py
+PINNs_for_2D_Poisson.py
+GitHub_1D_Poisson_PINNs.py
