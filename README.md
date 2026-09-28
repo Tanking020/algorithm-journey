@@ -14,10 +14,12 @@ algorithm-journey/
 ├── leetcode/               # LeetCode 题解(按题型分类)
 │   ├── array_hashing/      # 数组 & 哈希表
 │   ├── two_pointers/       # 双指针
-│   └── sliding_window/     # 滑动窗口
+│   ├── sliding_window/     # 滑动窗口
+│   └── stack/              # 栈
 ├── sorting/                # 经典排序算法
 │   └── problems/           # 排序思想的延伸应用(逆序对、小和、荷兰国旗)
 ├── notes/                  # 专题笔记与跨题总结
+├── PROBLEMS.md             # 📋 题目清单索引(题号 + 链接 + 状态)
 └── README.md
 ```
 
@@ -54,6 +56,15 @@ algorithm-journey/
 | 209 | [Minimum Size Subarray Sum](leetcode/sliding_window/209_minimum_size_subarray_sum.py) | Medium | ✅ |
 | 438 | [Find All Anagrams in a String](leetcode/sliding_window/438_find_all_anagrams_in_a_string.py) | Medium | ✅ |
 | 567 | [Permutation in String](leetcode/sliding_window/567_permutation_in_string.py) | Medium | ✅ |
+
+### 栈 · `leetcode/stack/`
+
+| # | 题目 | 难度 | 状态 |
+|---|---|---|---|
+| 20 | [Valid Parentheses](leetcode/stack/20_valid_parentheses.py) | Easy | ✅ |
+| 84 | [Largest Rectangle in Histogram](leetcode/stack/84_largest_rectangle_in_histogram.py) | Hard | ⬜ |
+| 155 | [Min Stack](leetcode/stack/155_min_stack.py) | Medium | ⬜ |
+| 739 | [Daily Temperatures](leetcode/stack/739_daily_temperatures.py) | Medium | ⬜ |
 
 ---
 
