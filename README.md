@@ -110,7 +110,28 @@ python sorting/merge_sort.py
 
 ---
 
-## 📌 说明
+## � Git 推送(SSH over 443)
+
+本机直连 `github.com:443` 常被网络阻断,而 `ssh.github.com:443` 可用,因此采用 SSH 并强制走 443 端口:
+
+- `~/.ssh/config` 中已把 `github.com` 映射到 `ssh.github.com` 的 **443** 端口;
+- 本仓库远程使用 SSH:`git@github.com:Tanking020/algorithm-journey.git`。
+
+**新克隆仓库时**:请选择 **SSH** 地址(`git@github.com:...`);若已用 HTTPS 克隆,执行一条命令切换:
+
+```bash
+git remote set-url origin git@github.com:<用户名>/<仓库名>.git
+```
+
+**自检**:
+
+```bash
+ssh -T git@github.com     # 看到 "Hi Tanking020! You've successfully authenticated" 即为正常
+```
+
+---
+
+## �📌 说明
 
 - 每个解法文件内部保留了从暴力到最优的演进过程,早期版本以注释形式存在。
 - 题目按**题型**归类,文件名保留题号前缀,便于按号检索。
