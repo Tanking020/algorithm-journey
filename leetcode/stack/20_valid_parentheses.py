@@ -4,7 +4,7 @@ class Solution(object):
         :type s: str
         :rtype: bool
         """
-        # 解法：栈
+        # 解法：栈（属于配对/抵消栈）
         # 时间复杂度：O(n)
         # 空间复杂度：O(n)
         pairs = {'}': '{', ']': '[', ')': '('}

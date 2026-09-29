@@ -44,7 +44,7 @@
 | 20 | [Valid Parentheses](leetcode/stack/20_valid_parentheses.py) | Easy | ✅ |
 | 84 | [Largest Rectangle in Histogram](leetcode/stack/84_largest_rectangle_in_histogram.py) | Hard | ⬜ |
 | 155 | [Min Stack](leetcode/stack/155_min_stack.py) | Medium | ✅ |
-| 739 | [Daily Temperatures](leetcode/stack/739_daily_temperatures.py) | Medium | ⬜ |
+| 739 | [Daily Temperatures](leetcode/stack/739_daily_temperatures.py) | Medium | ✅ |
 
 ---
 
@@ -75,5 +75,5 @@
 | 数组 & 哈希表 | 6 | 0 |
 | 双指针 | 4 | 0 |
 | 滑动窗口 | 5 | 0 |
-| 栈 | 2 | 2 |
-| **LeetCode 合计** | **17** | **2** |
+| 栈 | 3 | 1 |
+| **LeetCode 合计** | **18** | **1** |
