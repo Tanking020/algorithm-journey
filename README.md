@@ -15,7 +15,8 @@ algorithm-journey/
 │   ├── array_hashing/      # 数组 & 哈希表(含 notes.md 章节笔记)
 │   ├── two_pointers/       # 双指针(含 notes.md)
 │   ├── sliding_window/     # 滑动窗口(含 notes.md)
-│   └── stack/              # 栈(含 notes.md)
+│   ├── stack/              # 栈(含 notes.md)
+│   └── linked_list/        # 链表
 ├── sorting/                # 经典排序算法
 │   └── problems/           # 排序思想的延伸应用(逆序对、小和、荷兰国旗)
 ├── notes/                  # 跨题型通用专题(与章节笔记区分)
@@ -66,6 +67,20 @@ algorithm-journey/
 | 84 | [Largest Rectangle in Histogram](leetcode/stack/84_largest_rectangle_in_histogram.py) | Hard | ✅ |
 | 155 | [Min Stack](leetcode/stack/155_min_stack.py) | Medium | ✅ |
 | 739 | [Daily Temperatures](leetcode/stack/739_daily_temperatures.py) | Medium | ✅ |
+
+### 链表 · `leetcode/linked_list/`
+
+| # | 题目 | 难度 | 状态 |
+|---|---|---|---|
+| 2 | [Add Two Numbers](leetcode/linked_list/2_add_two_numbers.py) | Medium | ⬜ |
+| 19 | [Remove Nth Node From End of List](leetcode/linked_list/19_remove_nth_node_from_end_of_list.py) | Medium | ⬜ |
+| 21 | [Merge Two Sorted Lists](leetcode/linked_list/21_merge_two_sorted_lists.py) | Easy | ⬜ |
+| 141 | [Linked List Cycle](leetcode/linked_list/141_linked_list_cycle.py) | Easy | ⬜ |
+| 142 | [Linked List Cycle II](leetcode/linked_list/142_linked_list_cycle_ii.py) | Medium | ⬜ |
+| 143 | [Reorder List](leetcode/linked_list/143_reorder_list.py) | Medium | ⬜ |
+| 146 | [LRU Cache](leetcode/linked_list/146_lru_cache.py) | Medium | ⬜ |
+| 206 | [Reverse Linked List](leetcode/linked_list/206_reverse_linked_list.py) | Easy | ⬜ |
+| 234 | [Palindrome Linked List](leetcode/linked_list/234_palindrome_linked_list.py) | Easy | ⬜ |
 
 ---
 

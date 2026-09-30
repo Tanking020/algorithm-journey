@@ -7,6 +7,8 @@
   4. 状态 ⬜ 的题目，是否其实已经写完（写了但没同步）
   5. PROBLEMS.md 末尾统计表的数字是否与实际一致
   6. 某题型全部完成时，文件夹内是否有 notes.md
+  7. 文本文件中是否存在损坏字符 U+FFFD
+  8. 所有 .py 文件是否能通过语法编译
 
 用法：python tools/check_consistency.py
 退出码：0 = 全部通过；1 = 存在 ERROR
@@ -94,6 +96,7 @@ SECTION_LABEL = {
     "leetcode/two_pointers": "双指针",
     "leetcode/sliding_window": "滑动窗口",
     "leetcode/stack": "栈",
+    "leetcode/linked_list": "链表",
 }
 
 stats = parse_stats()
@@ -119,6 +122,30 @@ if "LeetCode 合计" in stats:
 for folder, c in by_section.items():
     if c["⬜"] == 0 and c["✅"] > 0 and not (ROOT / folder / "notes.md").exists():
         errors.append(f"[缺章节笔记] {folder} 已全部完成，但没有 notes.md")
+
+# --- 7：文本文件中是否存在损坏字符 U+FFFD（编辑器/工具误操作会导致 emoji 变乱码）---
+SKIP_DIRS = {".git", ".venv", "__pycache__"}
+for p in sorted(ROOT.rglob("*")):
+    if not p.is_file() or any(part in SKIP_DIRS for part in p.parts):
+        continue
+    if p.suffix not in {".md", ".py"}:
+        continue
+    try:
+        text = p.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        errors.append(f"[编码错误] {p.relative_to(ROOT)} 不是合法 UTF-8")
+        continue
+    if "\ufffd" in text:
+        errors.append(f"[损坏字符] {p.relative_to(ROOT)} 含 U+FFFD 替换字符")
+
+# --- 8：所有 .py 文件语法必须可编译（不写 .pyc，避免产生副产物）---
+for p in sorted(ROOT.rglob("*.py")):
+    if any(part in SKIP_DIRS for part in p.parts):
+        continue
+    try:
+        compile(p.read_text(encoding="utf-8"), str(p), "exec")
+    except SyntaxError as e:
+        errors.append(f"[语法错误] {p.relative_to(ROOT)}:{e.lineno}  {e.msg}")
 
 # --- 输出 ---
 print(f"题目总数: {len(problems)}   已完成 {total_done}   待完成 {total_todo}\n")
