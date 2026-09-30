@@ -62,7 +62,7 @@ algorithm-journey/
 | # | 题目 | 难度 | 状态 |
 |---|---|---|---|
 | 20 | [Valid Parentheses](leetcode/stack/20_valid_parentheses.py) | Easy | ✅ |
-| 84 | [Largest Rectangle in Histogram](leetcode/stack/84_largest_rectangle_in_histogram.py) | Hard | ⬜ |
+| 84 | [Largest Rectangle in Histogram](leetcode/stack/84_largest_rectangle_in_histogram.py) | Hard | ✅ |
 | 155 | [Min Stack](leetcode/stack/155_min_stack.py) | Medium | ✅ |
 | 739 | [Daily Temperatures](leetcode/stack/739_daily_temperatures.py) | Medium | ✅ |
 
