@@ -12,13 +12,14 @@
 ```
 algorithm-journey/
 ├── leetcode/               # LeetCode 题解(按题型分类)
-│   ├── array_hashing/      # 数组 & 哈希表
-│   ├── two_pointers/       # 双指针
-│   ├── sliding_window/     # 滑动窗口
-│   └── stack/              # 栈
+│   ├── array_hashing/      # 数组 & 哈希表(含 notes.md 章节笔记)
+│   ├── two_pointers/       # 双指针(含 notes.md)
+│   ├── sliding_window/     # 滑动窗口(含 notes.md)
+│   └── stack/              # 栈(含 notes.md)
 ├── sorting/                # 经典排序算法
 │   └── problems/           # 排序思想的延伸应用(逆序对、小和、荷兰国旗)
-├── notes/                  # 专题笔记与跨题总结
+├── notes/                  # 跨题型通用专题(与章节笔记区分)
+├── tools/                  # 仓库工具(check_consistency.py 文档一致性检查)
 ├── PROBLEMS.md             # 📋 题目清单索引(题号 + 链接 + 状态)
 └── README.md
 ```
@@ -95,7 +96,10 @@ algorithm-journey/
 
 ## 📝 笔记 · `notes/`
 
-存放跨题专题总结,例如算法模板、边界条件讨论、复杂度推导等。
+存放**跨题型**的通用专题总结,例如 Python 语法、面试技巧、复杂度推导等。
+
+> 另有 **章节笔记**: 每个题型文件夹内都有一份 `notes.md`(如 `leetcode/stack/notes.md`),
+> 记录该章节的**识别信号、可复用模板、踩坑回顾、复杂度速查、面试口述稿**。
 
 ---
 
@@ -110,7 +114,7 @@ python sorting/merge_sort.py
 
 ---
 
-## � Git 推送(SSH over 443)
+## 🔐 Git 推送(SSH over 443)
 
 本机直连 `github.com:443` 常被网络阻断,而 `ssh.github.com:443` 可用,因此采用 SSH 并强制走 443 端口:
 
@@ -131,6 +135,8 @@ ssh -T git@github.com     # 看到 "Hi Tanking020! You've successfully authentic
 
 ---
 
-## �📌 说明
+## 📌 说明
 
-- 每个解法文件内部保留了从暴力到最优的演进过程,早期版本以注释形式存在。- 部分题目内含多种解法对比(如 155 Min Stack 保留"双栈"与"单栈+元组"两种),便于权衡取舍。- 题目按**题型**归类,文件名保留题号前缀,便于按号检索。
+- 每个解法文件内部保留了从暴力到最优的演进过程,早期版本以注释形式存在。
+- 部分题目内含多种解法对比(如 155 Min Stack 保留"双栈"与"单栈+元组"两种),便于权衡取舍。
+- 题目按**题型**归类,文件名保留题号前缀,便于按号检索。

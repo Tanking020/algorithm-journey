@@ -25,7 +25,7 @@ class Solution(object):
         max_area = 0
 
         # 每根柱子做两件事：① 自己入栈等待；② 若它比栈顶更矮，它就是栈顶的【右边界】→ 弹出栈顶并结算
-        #   两种边界情形：栈空时左边界取 -1；末尾哨兵 0 会强制结算栈内剩余柱子
+        # 两种边界情形：栈空时左边界取 -1；末尾哨兵 0 会强制结算栈内剩余柱子
         for i, h in enumerate(heights):
 
             while stack and h < heights[stack[-1]]:
