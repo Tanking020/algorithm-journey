@@ -285,9 +285,144 @@ def __init__(self, val=0, next=None):
 | 10 | `__str__` 返回非字符串 | `TypeError: __str__ returned non-string` |
 | 11 | `" -> ".join([1,2,3])` | `join` 只吃字符串，Python 不自动转换 |
 | 12 | 自己写 `def __foo__` | 可能与将来 Python 官方的名字冲突 |
+| 13 | `while` 条件里的变量在循环体里不更新 | **死循环 / IndexError**（567、20 都踩过） |
+| 14 | 字符串拼接时多打/漏打空格 | 如 `'1 ->2 ->3'`；用 `repr()` 才能看出 |
+| 15 | 用 `is` 比较数字/字符串的**值** | 结果依赖 CPython 缓存，不可靠 |
+| 16 | 方法缩进多了 4 格 | 变成**嵌套函数**，类里调不到（`AttributeError`），但**不报语法错** |
+| 17 | 维护了 `size` 却忘记同步 | `len(obj)` 与实际不符，**静默出错** |
 
 ## 十一、一句话总结
 
 > **类 = 图纸；对象 = 按图纸造出的实例；`self` = 当前实例；`__init__` = 出厂设置（挂属性）。**
 > **变量是标签不是盒子 —— 所以要分清"移动标签"和"改对象属性"，这是理解链表指针操作的前提。**
 > **魔术方法（`__len__` / `__str__` / `__iter__`…）是 Python 认的"钩子名字"，实现了就自动支持对应语法。**
+
+---
+
+## 十二、`is` 与 `==`：身份 vs 值
+
+| | `==` | `is` |
+|---|---|---|
+| 比什么 | **值**是否相等（调用 `__eq__`） | 是不是**同一个对象**（身份/id） |
+| 例 | `[1,2] == [1,2]` → **True** | `[1,2] is [1,2]` → **False** |
+
+**选择规则**：
+
+- 比**值** → `==`
+- 比**是不是同一个对象** → `is`
+- **判 `None` → 一定用 `is None` / `is not None`**（PEP 8 推荐：更快，且不受自定义 `__eq__` 干扰）
+- **绝不要用 `is` 比较数字/字符串的值**
+
+**为什么不能用 `is` 比值** —— 结果依赖 CPython 实现细节：
+
+```python
+256 is int("256")                   # True   （小整数缓存 -5~256）
+257 is int("257")                   # False  （超出缓存，新对象）
+x, y = 257, 257                     # x is y → True！（同一行的字面量被编译器复用）
+"hello" is "hel" + "lo"             # True   （编译期就拼好）
+"hello" is "".join(["hel", "lo"])   # False  （运行期才拼）
+# 但它们的 == 永远都是 True
+```
+
+> 链表的遍历条件 `while cur is not None` 就是 `is` 的正当用法。
+
+## 十三、真假判定（truthiness）
+
+**Python 里任何对象都能做真假判断**（`if x:` / `while x:` / `bool(x)`）。
+
+**为假（falsy）就三类**：
+
+| 类别 | 例子 |
+|---|---|
+| `None` | `None` |
+| 各种**零** | `0`、`0.0`、`0j`、`False` |
+| 各种**空容器** | `""`、`[]`、`()`、`{}`、`set()`、`range(0)` |
+
+**反直觉但为真的**：
+
+| 值 | 真假 | 原因 |
+|---|---|---|
+| `-1` | **True** | 非零（负数也是真） |
+| `"0"` / `"False"` / `"None"` | **True** | 非空字符串 |
+| `" "`（一个空格） | **True** | 非空字符串 |
+| `[0]` / `(0,)` | **True** | 非空容器 |
+| `float("nan")` | **True** | 非零 |
+
+> **口诀：“空”和“零”才是假；字符串 `"0"` 因为长度不为 0，为真。**
+
+**自定义对象**：默认 True，除非：
+- 定义了 `__bool__` 且返回 False，或
+- **定义了 `__len__` 且返回 0** ← 实现了 `__len__` 的类（如 LinkedList）自动获得真假判断
+
+⚠️ **隐患**：`__len__` 影响真假 → 若内部的 `size` 忘记同步，`if obj:` 与 `obj.is_empty()` 会**互相矛盾**。
+
+## 十四、类型注解与 Pylance 推断
+
+```python
+self.next = None        # Pylance 推断：self.next 的类型就是 None
+new_node.next = head    # ❌ 报错：Node | None 不能赋给“只能是 None”的属性
+```
+
+**这不是运行时错误**（Python 运行时根本不检查类型），只是编辑器警告。修法：
+
+```python
+class Node(object):
+    def __init__(self, data):
+        self.data = data
+        self.next: "Node | None" = None      # ✅ 显式注解
+
+class LinkedList(object):
+    def __init__(self):
+        self.head: "Node | None" = None      # ✅ 有了它，current.next 也不再报错
+```
+
+> 力扣模板里的 `Optional[ListNode]` **就是 `ListNode | None`**。
+
+## 十五、缩进层级：方法必须写在类里
+
+```python
+class LinkedList:
+    def insert_at_tail(self):
+        ...
+        def insert_at_position(self):   # ❌ 8 个空格 → 嵌套在方法内部的函数
+            ...
+```
+
+后果：**不报语法错、程序照跑**，但 `lst.insert_at_position(...)` →
+`AttributeError: 'LinkedList' object has no attribute 'insert_at_position'`。
+
+> Java 靠大括号定层级，**Python 靠缩进**。每写完一个方法，扫一眼它的 `def` 是否与其它 `def` 对齐。
+
+## 十六、字符串：不可变 / join / 空格
+
+**① 不可变 ≠ 不能运算**
+
+```python
+a = "hello"
+b = a
+a = a + " world"    # 造出一个【新】字符串，a 改指向它
+print(b)            # "hello"  ← b 没变，证明原对象没被修改
+```
+
+**② 空格是字符、占一位**
+
+```python
+len("a b")     # 3
+list("a b")    # ['a', ' ', 'b']
+repr("a b")    # 'a b'   ← 用 repr() 让不可见字符现形（排查字符串 bug 第一招）
+```
+
+**③ `join` 用法**：`胶水.join(一串字符串)` —— 胶水在前，只加在中间，元素**必须都是字符串**
+
+```python
+" -> ".join(["1", "2", "3"])   # '1 -> 2 -> 3'
+"".join(["a", "b"])             # 'ab'
+```
+
+**④ `__str__` 里的典型数据流**
+
+```
+链表 → 遍历 append(str(node.data)) → ["1","2","3"] → " -> ".join(...) → "1 -> 2 -> 3"
+```
+
+> 所以 `str()` 是给 **`join`** 用的，不是给 `append` 用的（`append` 对类型毫无要求）。

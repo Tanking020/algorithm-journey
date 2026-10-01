@@ -27,6 +27,8 @@ class LinkedList(object):
         """
         判断链表是否为空
         """
+        # is None 判对象，== 判值，判 None 用 is 更快且不受 __eq__ 干扰，其余比值用 ==
+        # None、各种零、各种空容器 判 False, "0"、""、-1、[0] 都判 True
         return self.head is None
 
     def __len__(self):
@@ -186,4 +188,3 @@ class LinkedList(object):
         按位置删除：删除第 position 个节点（从 1 开始）
         """
         # 检查位置是否合法
-        

@@ -16,7 +16,7 @@ algorithm-journey/
 │   ├── two_pointers/       # 双指针(含 notes.md)
 │   ├── sliding_window/     # 滑动窗口(含 notes.md)
 │   ├── stack/              # 栈(含 notes.md)
-│   └── linked_list/        # 链表
+│   └── linked_list/        # 链表(含 notes.md)
 ├── sorting/                # 经典排序算法
 │   └── problems/           # 排序思想的延伸应用(逆序对、小和、荷兰国旗)
 ├── notes/                  # 跨题型通用专题(与章节笔记区分)
