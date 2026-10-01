@@ -113,6 +113,8 @@ algorithm-journey/
 
 存放**跨题型**的通用专题总结,例如 Python 语法、面试技巧、复杂度推导等。
 
+- [python_oop_basics.md](notes/python_oop_basics.md) — 类 / 对象 / `self` / `__init__` / 魔术方法 / 参数 / 变量 vs 对象（链表理解的前置知识）
+
 > 另有 **章节笔记**: 每个题型文件夹内都有一份 `notes.md`(如 `leetcode/stack/notes.md`),
 > 记录该章节的**识别信号、可复用模板、踩坑回顾、复杂度速查、面试口述稿**。
 
