@@ -14,7 +14,7 @@ class LinkedList(object):
     """
     定义单向链表类
 
-    声明：存在许多 print 操作，仅为练习直观展示，实际使用时候不写
+    声明：存在许多 print 操作，仅为练习直观展示，实际使用时候不写而是只用布尔变量返回法
     """
     def __init__(self):
         """
@@ -57,7 +57,7 @@ class LinkedList(object):
         # 语法：胶水.join(一串字符串)  胶水在前，只加在中间；元素必须都是字符串；返回新字符串
         # 右边括号内不一定是列表，任何可迭代对象都行，但是其元素必须都是字符串
         # 小注意点：字符串中空格有意义不要乱打空格
-        return  " ->".join(result) + " -> None"
+        return " -> ".join(result) + " -> None"
 
     def insert_at_head(self, data):
         """
@@ -79,6 +79,7 @@ class LinkedList(object):
         self.size += 1
 
         print(f"头插法插入 {data} 成功")
+        return True
 
     def insert_at_tail(self, data):
         """
@@ -96,7 +97,7 @@ class LinkedList(object):
             self.head = new_node
             self.size += 1 # 顺手更新链表长度，后面不再注释
             print(f"尾插法插入 {data} 成功（链表原本为空）")
-            return
+            return True
 
         # 遍历链表，找到最后一个节点
         current = self.head
@@ -110,21 +111,22 @@ class LinkedList(object):
 
         self.size += 1
         print(f"尾插法插入 {data} 成功")
+        return True
 
     def insert_at_position(self, position, data):
         """
         指定位置插入：在第 position 个位置（从 1 开始）插入新节点
         """
         # 检查位置是否合法
-        # "->(head) node1 -> position = 1 -> node2 -> None"
+        # "->(head) node1 (-> position = 2) -> node2 -> None"
         if position < 1 or position > self.size + 1:
             print(f"插入位置无效")
-            return
+            return False
 
         # 如果插入位置是头部，直接使用头插法
         if position == 1:
             self.insert_at_head(data)
-            return
+            return True
 
         # 创建新节点
         new_node = Node(data)
@@ -134,8 +136,8 @@ class LinkedList(object):
         # 利用序号变量维护控制位置
         current_pos = 1
 
-        # 跳出循环时 current_pos = position
-        while current_pos < position:
+        # 跳出循环时 current_pos = position - 1
+        while current_pos < position - 1:
             current = current.next
             current_pos += 1
 
@@ -146,6 +148,7 @@ class LinkedList(object):
 
         self.size += 1
         print(f"在位置 {position} 插入 {data} 成功")
+        return True
 
     def delete_by_value(self, value):
         """
@@ -158,6 +161,7 @@ class LinkedList(object):
             return False
 
         # 如果要删除的是头节点：
+        # 需要特判是因为头节点没有前驱，没法用"跳过"那一招
         if self.head.data == value:
             # 头指针指向下一个节点（python 中自动释放了原本的头节点）
             self.head = self.head.next
@@ -177,14 +181,15 @@ class LinkedList(object):
             print(f"未找到值为 {value} 的节点！")
             return False
 
-        # 执行删除操作：current 的 next 直接跳过要删除的节点（简洁）
+        # 执行删除操作：current 的 next 直接"跳过"要删除的节点（简洁）
         current.next = current.next.next
         self.size -= 1
         print(f"删除值为 {value} 的节点成功！")
         return True
 
-    def delete_at_position(self, position):
-        """"
+    def delete_by_position(self, position):
+        """
         按位置删除：删除第 position 个节点（从 1 开始）
         """
         # 检查位置是否合法
+        
