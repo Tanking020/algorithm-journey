@@ -80,7 +80,7 @@ algorithm-journey/
 | 143 | [Reorder List](leetcode/linked_list/143_reorder_list.py) | Medium | ⬜ |
 | 146 | [LRU Cache](leetcode/linked_list/146_lru_cache.py) | Medium | ⬜ |
 | 206 | [Reverse Linked List](leetcode/linked_list/206_reverse_linked_list.py) | Easy | ✅ |
-| 234 | [Palindrome Linked List](leetcode/linked_list/234_palindrome_linked_list.py) | Easy | ⬜ |
+| 234 | [Palindrome Linked List](leetcode/linked_list/234_palindrome_linked_list.py) | Easy | ✅ |
 
 ---
 

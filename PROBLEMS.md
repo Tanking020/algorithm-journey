@@ -58,7 +58,7 @@
 | 143 | [Reorder List](leetcode/linked_list/143_reorder_list.py) | Medium | ⬜ |
 | 146 | [LRU Cache](leetcode/linked_list/146_lru_cache.py) | Medium | ⬜ |
 | 206 | [Reverse Linked List](leetcode/linked_list/206_reverse_linked_list.py) | Easy | ✅ |
-| 234 | [Palindrome Linked List](leetcode/linked_list/234_palindrome_linked_list.py) | Easy | ⬜ |
+| 234 | [Palindrome Linked List](leetcode/linked_list/234_palindrome_linked_list.py) | Easy | ✅ |
 
 ---
 
@@ -90,5 +90,5 @@
 | 双指针 | 4 | 0 |
 | 滑动窗口 | 5 | 0 |
 | 栈 | 4 | 0 |
-| 链表 | 3 | 6 |
-| **LeetCode 合计** | **22** | **6** |
+| 链表 | 4 | 5 |
+| **LeetCode 合计** | **23** | **5** |
