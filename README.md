@@ -74,7 +74,7 @@ algorithm-journey/
 |---|---|---|---|
 | 2 | [Add Two Numbers](leetcode/linked_list/2_add_two_numbers.py) | Medium | ⬜ |
 | 19 | [Remove Nth Node From End of List](leetcode/linked_list/19_remove_nth_node_from_end_of_list.py) | Medium | ⬜ |
-| 21 | [Merge Two Sorted Lists](leetcode/linked_list/21_merge_two_sorted_lists.py) | Easy | ⬜ |
+| 21 | [Merge Two Sorted Lists](leetcode/linked_list/21_merge_two_sorted_lists.py) | Easy | ✅ |
 | 141 | [Linked List Cycle](leetcode/linked_list/141_linked_list_cycle.py) | Easy | ⬜ |
 | 142 | [Linked List Cycle II](leetcode/linked_list/142_linked_list_cycle_ii.py) | Medium | ⬜ |
 | 143 | [Reorder List](leetcode/linked_list/143_reorder_list.py) | Medium | ⬜ |

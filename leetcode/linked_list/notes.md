@@ -221,6 +221,52 @@ print(to_array(sol.reverseList(build([1, 2, 3, 4, 5]))))   # 期望 [5, 4, 3, 2,
 > 💡 `build` 里用的正是 `dummy` 哨兵 —— **提前预习了 21 / 19 / 2 的核心技巧**。
 > 唯一例外：**有环的题（141 / 142）**没法用 `build` 造环，得手动接：`a = build([3,2,0]); a.next.next.next = a.next`。
 
+### 5.4 ⭐ `dummy` + `tail`：构造新链表的标准姿势
+
+**两个指针，两种身份**：
+
+| 指针 | 职责 | 会不会动 |
+|---|---|---|
+| **`dummy`** | 记住新链的**入口**（最后 `return dummy.next`） | ❌ **永不动** |
+| **`tail`** | 记住当前**最后一个节点**（供 `tail.next = ...` 落笔） | ✅ **每轮前进** |
+
+**实测：只用 `dummy` 会怎样**（输入 `[1,2,4] + [1,3,5]`，期望 `[1,1,2,3,4,5]`）：
+
+| 写法 | 结果 | 原因 |
+|---|---|---|
+| 只用 `dummy`（没有 `tail`） | **`[5]`** ❌ | 每轮都写 `dummy.next` → 后写的覆盖先写的 |
+| 有 `tail` 但忘写 `tail = tail.next` | **`[5]`** ❌ | `tail` 卡在 `dummy` 上，**等价于没有 tail** |
+| `dummy + tail`（正确） | **`[1,1,2,3,4,5]`** ✅ | — |
+
+**为什么不能让 `dummy` 自己前进**：`dummy = dummy.next` 会**丢掉入口**，最后 `return dummy.next` 只能拿到 `None`。
+→ **「记住入口」和「记录落笔点」必须是两个变量。**
+
+**通用骨架**（21 / 19 / 2 / 143 / 146 全都能套）：
+
+```python
+dummy = ListNode()
+tail = dummy
+while <还有东西要接>:
+    tail.next = <某个节点>      # 1. 在新链的末尾落笔
+    <被接的那条往前挪>           # 2. 旧链指针前进
+    tail = tail.next            # 3. ⚠️ 尾巴前进（最容易漏）
+tail.next = <剩余部分>          # 4. 收尾：整段挂上
+return dummy.next               # 5. ⚠️ 不是 dummy！
+```
+
+**你其实早就写过这个模式** —— 就是脚手架的 `build()`：
+
+```python
+dummy = ListNode()     # 锚（不动）
+cur = dummy            # ← 这就是 tail！
+for v in arr:
+    cur.next = ListNode(v)
+    cur = cur.next     # 手往前挪
+return dummy.next
+```
+
+> **口诉**：**`dummy` = 锚（不动），`tail` = 手（一路往前挪）** —— 「**锚住入口，手往前挪**」。
+
 ## 六、基础操作实现要点（来自 `linked_list_basics.py`）
 
 | 操作 | 关键点 | 复杂度 |
@@ -287,6 +333,9 @@ while current_pos < position - 1:   # ✅ 停在插入位置的【前一个】�
 | 10 | 反转写成 `return head` | 循环后 `head` 已退化成**尾节点**，返回它只能得到一个节点。**必须 `return prev`**；但**空链表 / 单节点**要直接 `return head`（此时 `prev` 还是 `None`，返回它会把链丢丁） |
 | 11 | `get_at_position` 里写 `while current < position` | 拿**节点对象**和 **int** 比大小 → `TypeError: '<' not supported between instances of 'Node' and 'int'`。应该比**计数变量**：`while current_pos < position`（而且取第 k 个要停在 k，不是 k-1，与插入/删除不同） |
 | 12 | 满屏「`next` 不是 `None` 的已知属性」红名 | 根因是 `self.next = None` **没写类型注解**（一个根因、28 个症状）。修法：加 `"Node \| None"` 注解 + 判空直接写 `if self.head is None:`（别用 `self.is_empty()`）+ 必要的 `assert`（详见 §6.1） |
+| 13 | 想用「两条旧链互相穿插」来合并（21 题） | `index1.next = index2` 会**摘掉自己的尾巴** —— 实测 2000 组里 **51% 丢节点**。正确做法是「**挑节点接到新链尾巴后面**」（`tail.next = 较小者`）；**永远不要改旧链节点自己的 next 去指向另一条链的头** |
+| 14 | `list2 = list2.val`（应为 `.next`） | 变量从「节点」变成「整数」；循环条件 `list2 is not None` **拦不住**（int 不是 None），要到下一轮 `.val` 才 `AttributeError`。**`.val` 取值，`.next` 取节点，前进必须用 `.next`** |
+| 15 | 漏写 `tail = tail.next`（21 题） | `tail` 卡在 `dummy` 上 → 每轮都写同一个位置 → 只剩最后一个节点（实测得 `[5]`）。**它才是 `tail` 存在的意义**（详见 §5.4） |
 
 ## 八、易错点 / 自查清单
 
@@ -299,6 +348,7 @@ while current_pos < position - 1:   # ✅ 停在插入位置的【前一个】�
 - [ ] 字符串拼接的**空格**对了吗？（`repr()` 检查）
 - [ ] `def` 的**缩进**和别的 `def` 对齐吗？
 - [ ] 可能为 `None` 的 `.next` / `.data`，**访问前判空**了吗？（判空写 `if self.head is None:`，**别用封装方法**，否则 Pylance 无法收窄 —— 见 §6.1）
+- [ ] 用 `dummy` 构造新链时，**锚（`dummy`）没动、手（`tail`）前进了**吗？收尾接上剩余部分了吗？返回的是 `dummy.next` 吗？（见 §5.4）
 
 ## 九、复杂度速查（基础操作）
 
@@ -327,7 +377,7 @@ while current_pos < position - 1:   # ✅ 停在插入位置的【前一个】�
 | 2 | Add Two Numbers | Medium | 进位模拟 + dummy |
 | 234 | Palindrome Linked List | Easy | 快慢找中点 + 反转后半段 |
 
-> 进度：**206 已完成 ✅**（三指针原地反转，$O(n)$ 时间 / $O(1)$ 空间；空链表与单节点直接 `return head`）。
+> 进度：**206 ✅ / 21 ✅**（21 = dummy 哨兵 + 尾指针原地合并，$O(m+n)$ 时间 / $O(1)$ 空间）。
 
 ## 十一、面试可以这么说
 
