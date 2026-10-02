@@ -53,7 +53,7 @@
 | 2 | [Add Two Numbers](leetcode/linked_list/2_add_two_numbers.py) | Medium | ⬜ |
 | 19 | [Remove Nth Node From End of List](leetcode/linked_list/19_remove_nth_node_from_end_of_list.py) | Medium | ⬜ |
 | 21 | [Merge Two Sorted Lists](leetcode/linked_list/21_merge_two_sorted_lists.py) | Easy | ✅ |
-| 141 | [Linked List Cycle](leetcode/linked_list/141_linked_list_cycle.py) | Easy | ⬜ |
+| 141 | [Linked List Cycle](leetcode/linked_list/141_linked_list_cycle.py) | Easy | ✅ |
 | 142 | [Linked List Cycle II](leetcode/linked_list/142_linked_list_cycle_ii.py) | Medium | ⬜ |
 | 143 | [Reorder List](leetcode/linked_list/143_reorder_list.py) | Medium | ⬜ |
 | 146 | [LRU Cache](leetcode/linked_list/146_lru_cache.py) | Medium | ⬜ |
@@ -90,5 +90,5 @@
 | 双指针 | 4 | 0 |
 | 滑动窗口 | 5 | 0 |
 | 栈 | 4 | 0 |
-| 链表 | 2 | 7 |
-| **LeetCode 合计** | **21** | **7** |
+| 链表 | 3 | 6 |
+| **LeetCode 合计** | **22** | **6** |
