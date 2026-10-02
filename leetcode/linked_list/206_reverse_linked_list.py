@@ -4,9 +4,9 @@ class Solution(object):
         :type head: Optional[ListNode]
         :rtype: Optional[ListNode]
         """
-        # 解法：
-        # 时间复杂度：
-        # 空间复杂度：
+        # 解法：三指针原地反转（头插法建新链的变体；力扣链表题的地基）
+        # 时间复杂度：O(n)
+        # 空间复杂度：O(1)
         if head is None or head.next is None:
             return head
 
