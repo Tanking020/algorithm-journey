@@ -8,7 +8,9 @@ class Node(object):
         初始化节点
         """
         self.data = data # 数据域：存储数据
-        self.next = None # 指针域：初始化为 None, 表示不指向任何节点
+        # 类型注解：next 既可以是一个节点，也可以是 None（表示后面没有节点了）
+        # 不加注解时 Pylance 会把 next 推断成"永远是 None"，后面所有赋值/访问都会报错
+        self.next: "Node | None" = None # 指针域：初始化为 None, 表示不指向任何节点
 
 class LinkedList(object):
     """
@@ -20,7 +22,8 @@ class LinkedList(object):
         """
         初始化链表，头指针指向 None
         """
-        self.head = None # 头指针，初始化为 None 表示空链表
+        # 类型注解：head 可以指向一个节点，也可以是 None（空链表）
+        self.head: "Node | None" = None # 头指针，初始化为 None 表示空链表
         self.size = 0 # 链表长度，方便获取长度（可选优化）
 
     def is_empty(self) -> bool:
@@ -50,8 +53,9 @@ class LinkedList(object):
         返回：
             包含 " -> " 的链表打印结果字符串
         """
-        # 用写过的判空方法来做判空
-        if self.is_empty():
+        # 这里不用 self.is_empty()：直接判 self.head，
+        # 这样 Pylance 能把 head 的类型从 "Node | None" 收窄成 "Node"（is_empty() 做不到）
+        if self.head is None:
             return "空链表"
 
         result = []
@@ -105,7 +109,8 @@ class LinkedList(object):
 
         # 链表判空
         # 空链表头指针指向 None, 此时新节点直接成为头节点就是插入新节点了
-        if self.is_empty():
+        # 直接判 self.head（不用 self.is_empty()）→ 后面 Pylance 就知道 current 不可能是 None
+        if self.head is None:
             self.head = new_node
             self.size += 1 # 顺手更新链表长度，后面不再注释
             print(f"尾插法插入 {data} 成功（链表原本为空）")
@@ -143,15 +148,23 @@ class LinkedList(object):
         # 创建新节点
         new_node = Node(data)
 
+        # 走到这里说明 position >= 2 → 链表至少有 1 个节点 → head 必然不为 None
+        # assert 就是把"我们知道、但类型检查器不知道"的事告诉 Pylance 的标准做法
+        assert self.head is not None
+
         # 遍历到 position - 1 的位置
         current = self.head
         # 利用序号变量维护控制位置
         current_pos = 1
 
         # 跳出循环时 current_pos = position - 1
-        while current_pos < position - 1:
+        # 条件里带上 current is not None，Pylance 才能确定循环体里 current 不是 None
+        while current is not None and current_pos < position - 1:
             current = current.next
             current_pos += 1
+
+        # position 已校验 → 前驱节点必然存在
+        assert current is not None
 
         # 插入操作（依旧是先存住链表尾部防丢失）：新节点的 next 指向 current 的下一个节点
         new_node.next = current.next
@@ -166,8 +179,8 @@ class LinkedList(object):
         """
         按值删除：删除第一个值为 value 的节点
         """
-        # 链表为空时候直接返回
-        if self.is_empty():
+        # 链表为空时候直接返回（直接判 head，便于后面 Pylance 收窄类型）
+        if self.head is None:
             print("链表为空，无法删除哦")
             # 返回布尔变量以后可以检查删除成功了没
             return False
@@ -211,6 +224,9 @@ class LinkedList(object):
             print("删除位置不合法")
             return None
 
+        # 位置合法 → 1 <= position <= size → 链表至少有 1 个节点 → head 必然不为 None
+        assert self.head is not None
+
         # 如果要删除的是头节点
         if position == 1:
             deleted_data = self.head.data
@@ -225,15 +241,19 @@ class LinkedList(object):
         current_pos = 1
 
         # 删除操作和插入操作中"位置"的意义有区别
-        while current_pos < position - 1:
+        while current is not None and current_pos < position - 1:
             current = current.next
             current_pos += 1
 
-        # 保存被删节点的数据
-        deleted_data = current.next.data
+        assert current is not None
+
+        # 保存被删节点：position 已校验 → 目标节点必然存在
+        target = current.next
+        assert target is not None
+        deleted_data = target.data
 
         # 删除操作：跳过要删除的节点
-        current.next = current.next.next
+        current.next = target.next
         self.size -= 1
 
         print(f"删除位置 {position} 位置数据 {deleted_data} 成功")
@@ -266,12 +286,19 @@ class LinkedList(object):
         if position < 1 or position > self.size:
             return None
 
+        # 位置合法 → 链表至少有 1 个节点 → head 必然不为 None
+        assert self.head is not None
+
         current = self.head
         current_pos = 1
 
-        while current_pos < position:
+        # 同上：条件里带上 current is not None，帮助 Pylance 收窄
+        while current is not None and current_pos < position:
             current = current.next
             current_pos += 1
+
+        # position 已校验 → 第 position 个节点必然存在
+        assert current is not None
 
         return current.data
 
@@ -289,8 +316,9 @@ class LinkedList(object):
         # ...
         # "None <- node1 <- node2 <- node3 <- node4 <- node5 <-(.head)"
 
-        # 先判空/只有一个节点
-        if self.is_empty() or self.head.next is None:
+        # 先判空 / 只有一个节点
+        # 直接判 self.head（不用 self.is_empty()）→ 通过后 Pylance 知道 head 必为 Node
+        if self.head is None or self.head.next is None:
             return True
 
         # 前一个节点，初始为 None

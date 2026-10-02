@@ -247,6 +247,30 @@ while current_pos < position - 1:   # ✅ 停在插入位置的【前一个】�
 
 **⚠️ 维护 `self.size` 的纪律**：每次增删都要 `+1` / `-1`。漏了会**静默出错**（`len(obj)` 与实际不符，还会让 `bool(obj)` 与 `is_empty()` 矛盾）。
 
+### 6.1 类型注解 + 类型收窄：消掉 Pylance 静态误报
+
+**问题**：链表代码常年报一堆「`next` 不是 `None` 的已知属性」，文件红名很烦。
+
+**根因**：`self.next = None` **没写类型注解** → Pylance 推断成「**永远是 `None`**」→ 之后所有赋值/访问全崩。**一个根因，28 个症状。**
+
+**三步走，实测 28 条 → 0 条**：
+
+| 步骤 | 做法 | 效果 |
+|---|---|---|
+| ① | `self.next: "Node \| None" = None`<br>`self.head: "Node \| None" = None` | 干掉 `reportAttributeAccessIssue`（约 6 条），并**白拿成员自动补全** |
+| ② | 判空写 `if self.head is None:`，**别用 `self.is_empty()`** | 让 Pylance 能**收窄**（narrowing）：`self.head` 由 `Node \| None` → `Node` |
+| ③ | 循环条件带 `while current is not None and ...`，位置校验后补 `assert current is not None` | `current = current.next` 会把类型**重新扩宽**回 `Node \| None`，必须这样压回去 |
+
+**为什么不直接关掉检查**：收窄之后，这条规则就从「噪音」变成「**哨兵**」—— 你真忘了判空就访问 `.next`，它会**当场抓出来**。
+
+**三个关键认知**：
+
+1. **普通方法是收窄的「黑洞」**：`if self.is_empty():` 里的 `is_empty()` 无论返回什么，Pylance 都不认为它保证了 `self.head` 非空；必须写成 `if self.head is None:` 才行。
+2. **`assert x is not None` 是「把已知事实告诉类型检查器」的标准做法** —— 运行时几乎零成本（`python -O` 下会被剥掉）。
+3. **注解加引号**（`"Node | None"`）：类还没定义完就引用自己，加引号是延迟求值的保险写法（不加一般也能跑）。
+
+**附带收获**：改成判空写法后，`is_empty()` 在类里就**没有内部调用者**了 —— **留着它**，它是公开 API，测试与外部调用都用得到。
+
 ## 七、我踩过的坑（真实记录）
 
 | # | 坑 | 现象 / 教训 |
@@ -262,6 +286,7 @@ while current_pos < position - 1:   # ✅ 停在插入位置的【前一个】�
 | 9 | 在力扣 `Solution` 里写了 `self.head` | `AttributeError: 'Solution' object has no attribute 'head'`。**力扣没有容器类，`head` 是参数不是属性** → 用参数 `head` 开头，改头时用 `prev` / `dummy` 记录，最后 `return`（详见 §5.2） |
 | 10 | 反转写成 `return head` | 循环后 `head` 已退化成**尾节点**，返回它只能得到一个节点。**必须 `return prev`**；但**空链表 / 单节点**要直接 `return head`（此时 `prev` 还是 `None`，返回它会把链丢丁） |
 | 11 | `get_at_position` 里写 `while current < position` | 拿**节点对象**和 **int** 比大小 → `TypeError: '<' not supported between instances of 'Node' and 'int'`。应该比**计数变量**：`while current_pos < position`（而且取第 k 个要停在 k，不是 k-1，与插入/删除不同） |
+| 12 | 满屏「`next` 不是 `None` 的已知属性」红名 | 根因是 `self.next = None` **没写类型注解**（一个根因、28 个症状）。修法：加 `"Node \| None"` 注解 + 判空直接写 `if self.head is None:`（别用 `self.is_empty()`）+ 必要的 `assert`（详见 §6.1） |
 
 ## 八、易错点 / 自查清单
 
@@ -273,6 +298,7 @@ while current_pos < position - 1:   # ✅ 停在插入位置的【前一个】�
 - [ ] `__str__` **返回的是字符串**吗？
 - [ ] 字符串拼接的**空格**对了吗？（`repr()` 检查）
 - [ ] `def` 的**缩进**和别的 `def` 对齐吗？
+- [ ] 可能为 `None` 的 `.next` / `.data`，**访问前判空**了吗？（判空写 `if self.head is None:`，**别用封装方法**，否则 Pylance 无法收窄 —— 见 §6.1）
 
 ## 九、复杂度速查（基础操作）
 
