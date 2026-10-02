@@ -17,6 +17,25 @@ sol = Solution()
 #         self.val = val
 #         self.next = next
 #
-# l1 = ListNode(2, ListNode(4, ListNode(3)))   # 342
-# l2 = ListNode(5, ListNode(6, ListNode(4)))   # 465
-# print(sol.addTwoNumbers(l1, l2))              # 807
+#
+# def build(arr):
+#     """数组 -> 链表（力扣判题机就是这么把用例构造成输入的）"""
+#     dummy = ListNode()
+#     cur = dummy
+#     for v in arr:
+#         cur.next = ListNode(v)
+#         cur = cur.next
+#     return dummy.next
+#
+#
+# def to_array(head):
+#     """链表 -> 数组（方便和期望结果对照）"""
+#     out = []
+#     while head:
+#         out.append(head.val)
+#         head = head.next
+#     return out
+#
+# l1 = build([2, 4, 3])                        # 表示数字 342（链表逆序存储）
+# l2 = build([5, 6, 4])                        # 表示数字 465
+# print(to_array(sol.addTwoNumbers(l1, l2)))   # 期望 [7, 0, 8]（即 807）

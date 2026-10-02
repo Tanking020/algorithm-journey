@@ -16,6 +16,25 @@ sol = Solution()
 #         self.val = val
 #         self.next = next
 #
-# a, b, c = ListNode(3), ListNode(2), ListNode(0)
-# a.next, b.next, c.next = b, c, b     # 环入口是 b
-# print(sol.detectCycle(a).val)
+#
+# def build(arr):
+#     """数组 -> 链表（力扣判题机就是这么把用例构造成输入的）"""
+#     dummy = ListNode()
+#     cur = dummy
+#     for v in arr:
+#         cur.next = ListNode(v)
+#         cur = cur.next
+#     return dummy.next
+#
+#
+# def to_array(head):
+#     """链表 -> 数组（方便和期望结果对照）"""
+#     out = []
+#     while head:
+#         out.append(head.val)
+#         head = head.next
+#     return out
+#
+# a = build([3, 2, 0])
+# a.next.next.next = a.next      # 尾节点 0 指回 2，形成环（入口为 2）
+# print(sol.detectCycle(a).val)  # 期望 2

@@ -23,23 +23,32 @@ class LinkedList(object):
         self.head = None # 头指针，初始化为 None 表示空链表
         self.size = 0 # 链表长度，方便获取长度（可选优化）
 
-    def is_empty(self):
+    def is_empty(self) -> bool:
         """
         判断链表是否为空
+
+        返回:
+            链表是否为空
         """
         # is None 判对象，== 判值，判 None 用 is 更快且不受 __eq__ 干扰，其余比值用 ==
         # None、各种零、各种空容器 判 False, "0"、""、-1、[0] 都判 True
         return self.head is None
 
-    def __len__(self):
+    def __len__(self) -> int:
         """
         获取链表长度
+
+        返回：
+            链表长度
         """
         return self.size
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         打印链表内容
+
+        返回：
+            包含 " -> " 的链表打印结果字符串
         """
         # 用写过的判空方法来做判空
         if self.is_empty():
@@ -59,11 +68,14 @@ class LinkedList(object):
         # 小注意点：字符串中空格有意义不要乱打空格
         return " -> ".join(result) + " -> None"
 
-    def insert_at_head(self, data):
+    def insert_at_head(self, data) -> bool:
         """
         头插法：在链表头部插入新节点
 
         时间复杂度：O(1)
+
+        返回：
+            插入操作是否顺利完成
         """
         # 创建新节点
         new_node = Node(data)
@@ -81,7 +93,7 @@ class LinkedList(object):
         print(f"头插法插入 {data} 成功")
         return True
 
-    def insert_at_tail(self, data):
+    def insert_at_tail(self, data) -> bool:
         """
         尾插法：在链表尾部插入新节点
         时间复杂度：O(n)
@@ -113,7 +125,7 @@ class LinkedList(object):
         print(f"尾插法插入 {data} 成功")
         return True
 
-    def insert_at_position(self, position, data):
+    def insert_at_position(self, position, data) -> bool:
         """
         指定位置插入：在第 position 个位置（从 1 开始）插入新节点
         """
@@ -150,7 +162,7 @@ class LinkedList(object):
         print(f"在位置 {position} 插入 {data} 成功")
         return True
 
-    def delete_by_value(self, value):
+    def delete_by_value(self, value) -> bool:
         """
         按值删除：删除第一个值为 value 的节点
         """
@@ -187,9 +199,140 @@ class LinkedList(object):
         print(f"删除值为 {value} 的节点成功！")
         return True
 
-    def delete_by_position(self, position):
+    def delete_at_position(self, position) -> float | None:
         """
         按位置删除：删除第 position 个节点（从 1 开始）
+
+        返回：
+            被删除的值
         """
         # 检查位置是否合法
-        
+        if position < 1 or position > self.size:
+            print("删除位置不合法")
+            return None
+
+        # 如果要删除的是头节点
+        if position == 1:
+            deleted_data = self.head.data
+            self.head = self.head.next
+            self.size -= 1
+            print(f"删除位置 1 （数据 {deleted_data}） 成功")
+            # 删除操作返回被删除的值
+            return deleted_data
+
+        # 遍历到删除位置的前一个节点
+        current = self.head
+        current_pos = 1
+
+        # 删除操作和插入操作中"位置"的意义有区别
+        while current_pos < position - 1:
+            current = current.next
+            current_pos += 1
+
+        # 保存被删节点的数据
+        deleted_data = current.next.data
+
+        # 删除操作：跳过要删除的节点
+        current.next = current.next.next
+        self.size -= 1
+
+        print(f"删除位置 {position} 位置数据 {deleted_data} 成功")
+        return deleted_data
+
+    # 从此处开始不写 print, 仅用返回值代表含义
+    def search(self, value) -> int:
+        """
+        按值查找：查找第一个值为 value 的节点
+        """
+        current = self.head
+        position = 1
+
+        # 遍历建立：不要漏掉头节点的判定哦
+        while current is not None:
+            if current.data == value:
+                return position
+            current = current.next
+            position += 1
+
+        # 除了 None 也可以用合法类型里的一个特殊值（如 -1）表示失败
+        # 也是 int 类型但必须在真实数据域之外
+        return -1
+
+    def get_at_position(self, position) -> None | float:
+        """
+        按位置获取：获取第 position 个节点的数据
+        """
+        # 检查位置是否合法
+        if position < 1 or position > self.size:
+            return None
+
+        current = self.head
+        current_pos = 1
+
+        while current_pos < position:
+            current = current.next
+            current_pos += 1
+
+        return current.data
+
+    def reverse(self) -> bool:
+        """
+        反转链表：将链表顺序颠倒
+
+        时间复杂度：O(n)
+        """
+        # 自画思路图：
+        # "->(.head) node1(cur) -> node2 -> node3 -> node4 -> node5 -> None"
+        # "None == prev <- node1(cur) | next_node -> node2 -> node3 -> node4 -> node5 -> None"
+        # "None <- node1  == next_node(cur) | -> node2 -> node3 -> node4 -> node5 -> None"
+        # "None <- node1 == prev <- node2(cur) <-(.head) | next_node -> node3-> node4-> node5 -> None"
+        # ...
+        # "None <- node1 <- node2 <- node3 <- node4 <- node5 <-(.head)"
+
+        # 先判空/只有一个节点
+        if self.is_empty() or self.head.next is None:
+            return True
+
+        # 前一个节点，初始为 None
+        prev = None
+
+        # 当前节点，从头开始
+        current = self.head
+
+        # 遍历链表，逐个指针反转方向，头指针不参与逐节点反转，循环结束后统一赋值 self.head = prev
+        while current is not None:
+            # 先保存下一个节点，防止断链
+            next_node = current.next
+            # 当前节点指向前一个节点（反转）
+            current.next = prev
+            # 前一个节点移动到当前
+            prev = current
+            # 当前节点移动到下一个
+            current = next_node
+
+        # 最后 prev 就是新的头节点（此时 prev 节点就是反转前的最后一个节点）
+        self.head = prev
+        return True
+
+    def clear(self) -> None:
+        """
+        清空链表：删除所有节点
+        """
+        self.head = None
+        self.size = 0
+
+    def to_list(self) -> list:
+        """
+        将链表转换为 Python 列表
+
+        返回：
+            链表转换为的列表
+        """
+        result = []
+        current = self.head
+
+        while current is not None:
+            result.append(current.data)
+            current = current.next
+
+        return result

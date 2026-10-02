@@ -129,6 +129,44 @@ python leetcode/array_hashing/1_two_sum.py
 python sorting/merge_sort.py
 ```
 
+### 🧪 链表题的本地自测脚手架
+
+力扣的链表题把**头当参数**传进来（`Solution` 里**没有** `self.head`），网页上写的
+`head = [1,2,3,4,5]` 只是**展示格式**,实际收到的是 `ListNode`（`val` / `next`）。
+
+因此 `leetcode/linked_list/` 下每个骨架文件底部都带同一套脚手架
+(**完整解法文件里为激活态;骨架文件里为注释态,取消注释即可自测**):
+
+```python
+class ListNode(object):          # 力扣环境自带,本地需要自己补
+    def __init__(self, val=0, next=None):
+        self.val, self.next = val, next
+
+def build(arr):                  # [1,2,3] -> 1->2->3（复刻判题机的构造过程）
+    dummy = ListNode()
+    cur = dummy
+    for v in arr:
+        cur.next = ListNode(v)
+        cur = cur.next
+    return dummy.next
+
+def to_array(head):              # 链表 -> [1,2,3]（方便和期望结果对照）
+    out = []
+    while head:
+        out.append(head.val)
+        head = head.next
+    return out
+```
+
+用法一行搞定:
+
+```python
+print(to_array(sol.reverseList(build([1, 2, 3, 4, 5]))))   # 期望 [5, 4, 3, 2, 1]
+```
+
+> ⚠️ **提交力扣前务必把整段脚手架注释掉**（力扣自带 `ListNode`,重复定义会报错）。
+> 原理与踩坑详见 [leetcode/linked_list/notes.md](leetcode/linked_list/notes.md) 的 §5.2 / §5.3。
+
 ---
 
 ## 🔐 Git 推送(SSH over 443)
@@ -157,3 +195,4 @@ ssh -T git@github.com     # 看到 "Hi Tanking020! You've successfully authentic
 - 每个解法文件内部保留了从暴力到最优的演进过程,早期版本以注释形式存在。
 - 部分题目内含多种解法对比(如 155 Min Stack 保留"双栈"与"单栈+元组"两种),便于权衡取舍。
 - 题目按**题型**归类,文件名保留题号前缀,便于按号检索。
+- 链表题统一带 `build` / `to_array` 本地自测脚手架(见上文「🧪 链表题的本地自测脚手架」)。

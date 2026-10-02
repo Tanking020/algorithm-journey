@@ -2,7 +2,7 @@
 
 > 对应题目：2 / 19 / 21 / 141 / 142 / 143 / 146 / 206 / 234（**进行中**）
 >
-> 另有基础练习：`linked_list_basics.py`（自写 Node / LinkedList + 头插 / 尾插 / 指定位置插入 / 按值删除）
+> 另有基础练习：`linked_list_basics.py`（自写 Node / LinkedList + 头插 / 尾插 / 按位置插入 / 按值删除 / 按位置删除 / 按值查找 / 按位置获取 / **反转** / 清空 / 转列表）
 >
 > 更新时间：2026-10-02（演进式笔记，随刷题持续补充）
 
@@ -122,6 +122,105 @@ prev.next  = prev.next.next     # 删中间节点 —— 同一个写法！
 
 > 后面 **21 / 19 / 2 / 143 / 146** 几乎都会用到 dummy。
 
+### 5.1 ⚠️ 术语陷阱：「头结点」到底指谁？
+
+> **头指针指向的节点 = 头节点**（宽泛说法，成立）。
+> **但中文教材（严蔚敏《数据结构》）的「头结点」常专指「不存业务数据的虚拟节点」** —— 这时第一个数据节点叫「**首元节点**」。
+
+| 术语 | 英文 | 本质 |
+|---|---|---|
+| **头指针** | head pointer | 一个**指针**（变量/属性），链表的入口，可以为 `None` |
+| **头结点** | head node / dummy head | ⚠️ 中文教材多指**不存数据的占位节点**（= 力扣的 dummy / 哨兵） |
+| **首元节点** | first node | 第一个**真正存业务数据**的节点 |
+
+**两种约定对比**（`linked_list_basics.py` 用的是 A）：
+
+```
+【约定 A：不带头结点】= 力扣、我的实现
+   head ──▶ [1] ──▶ [2] ──▶ [3] ──▶ None
+            ↑ 首元节点，head.data = 1 就是业务数据
+
+【约定 B：带头结点】= 教材常见写法
+   head ──▶ [头结点] ──▶ [1] ──▶ [2] ──▶ [3] ──▶ None
+            (data=None)  ↑ 首元节点
+            head.data = None（读不到业务数据）
+            head.next.data = 1（真数据从这里开始）
+```
+
+- 两者**逻辑内容完全一样**，区别只在「要不要在前面垫一个占位节点」；
+- **判断法**：看 `head.data` 是不是业务数据 —— 是 → 约定 A；是 `None` / 占位值 → 约定 B。
+
+**教材为什么用「带头结点」**：让「第一个位置」和「其他位置」的操作统一，不用特判 ——
+
+| 操作 | 不带头结点（A） | 带头结点（B） |
+|---|---|---|
+| 插入/删除**第一个元素** | ❌ **要特判**（没有前驱） | ✅ 和中间一样，改 `head.next` |
+| 空链表表示 | `head is None` | `head.next is None`（head 永不为 None） |
+
+> 💡 **同一个东西，三种叫法**：教材的「带头结点的链表」= 力扣题解的 `dummy`（哨兵）= 给头结点**伪造一个前驱**。
+>
+> 力扣题目参数 `head` 一律是**约定 A**；需要时**临时造一个 dummy** 即可，不必整个链表都带头结点。
+
+## 5.2 ⭐ 力扣的链表写法 vs 你自己写的链表类
+
+| | **你写的**（`linked_list_basics.py`） | **力扣的** |
+|---|---|---|
+| 类 | `LinkedList`（容器）**+** `Node`（节点） | **只有 `ListNode`**（节点） |
+| “头”在哪 | `self.head`，是**对象的属性** | 是**函数参数** `head` |
+| 怎么开始遍历 | `self.head` | 直接用参数 `head` |
+| 怎么交出结果 | 改 `self.head` | **必须 `return` 新头** |
+| 字段名 | `data` / `next` | **`val`** / `next` |
+
+**核心差异一句话**：
+
+> **力扣：`head` 是参数，答案靠 `return`。**
+> **你自己的类：`self.head` 是属性，改完不用 return。**
+
+**为什么力扣不给容器类**：① 只考算法，容器 API 是噪音；② 判题机要好构造输入；③ 头的传递用参数最干净，不会残留状态。
+
+**力扣的 `ListNode` 定义在注释块里**（`# Definition for singly-linked list.`），**不要自己重新定义** —— 这正是本地脚手架里的 `class ListNode` 必须注释掉的原因。
+
+### ⚠️ 网页上的 `head = [1,2,3,4,5]` 不是列表！
+
+那只是**展示格式**（JSON 里没法表达指针，用数组代替）。判题机的实际流程：
+
+```
+网页 [1,2,3,4,5]  --build()-->  ListNode 链  --你的函数-->  新头  --to_array()-->  网页 [5,4,3,2,1]
+```
+
+实测：`isinstance(head, list)` → `False`，**你收到的永远是 `ListNode`**。
+二叉树题同理（`root = [3,9,20,null,null,15,7]` → 实际是 `TreeNode`）。
+
+## 5.3 本地自测脚手架：`build` / `to_array`
+
+链表骨架文件底部都带同一套脚手架（力扣环境自带 `ListNode`，**提交前记得注释掉**）：
+
+```python
+def build(arr):      # [1,2,3] -> 1->2->3（复刻判题机的构造过程）
+    dummy = ListNode()
+    cur = dummy
+    for v in arr:
+        cur.next = ListNode(v)
+        cur = cur.next
+    return dummy.next
+
+def to_array(head):  # 链表 -> [1,2,3]（方便和期望结果对照）
+    out = []
+    while head:
+        out.append(head.val)
+        head = head.next
+    return out
+```
+
+自测就变成一行：
+
+```python
+print(to_array(sol.reverseList(build([1, 2, 3, 4, 5]))))   # 期望 [5, 4, 3, 2, 1]
+```
+
+> 💡 `build` 里用的正是 `dummy` 哨兵 —— **提前预习了 21 / 19 / 2 的核心技巧**。
+> 唯一例外：**有环的题（141 / 142）**没法用 `build` 造环，得手动接：`a = build([3,2,0]); a.next.next.next = a.next`。
+
 ## 六、基础操作实现要点（来自 `linked_list_basics.py`）
 
 | 操作 | 关键点 | 复杂度 |
@@ -159,6 +258,10 @@ while current_pos < position - 1:   # ✅ 停在插入位置的【前一个】�
 | 5 | 拼接时漏了空格：`" ->".join(...)` | 输出 `'1 ->2 ->3'`；**用 `repr()` 才能看出** |
 | 6 | 忘记更新 `self.size` | `len(lst)` 返回 0 但实际有 3 个节点（**静默错误**） |
 | 7 | `insert_at_position` 的 off-by-one | 中间位置插错、`size+1` 直接崩溃 |
+| 8 | 术语混淆：以为「头节点」就是「头结点」 | **头指针指向的节点**在宽泛意义上叫头节点；但教材的「头结点」多指**不存数据的虚拟节点**，此时第一个数据节点叫「**首元节点**」。**看 `head.data` 是不是业务数据**最可靠（详见 §5.1） |
+| 9 | 在力扣 `Solution` 里写了 `self.head` | `AttributeError: 'Solution' object has no attribute 'head'`。**力扣没有容器类，`head` 是参数不是属性** → 用参数 `head` 开头，改头时用 `prev` / `dummy` 记录，最后 `return`（详见 §5.2） |
+| 10 | 反转写成 `return head` | 循环后 `head` 已退化成**尾节点**，返回它只能得到一个节点。**必须 `return prev`**；但**空链表 / 单节点**要直接 `return head`（此时 `prev` 还是 `None`，返回它会把链丢丁） |
+| 11 | `get_at_position` 里写 `while current < position` | 拿**节点对象**和 **int** 比大小 → `TypeError: '<' not supported between instances of 'Node' and 'int'`。应该比**计数变量**：`while current_pos < position`（而且取第 k 个要停在 k，不是 k-1，与插入/删除不同） |
 
 ## 八、易错点 / 自查清单
 
@@ -197,6 +300,8 @@ while current_pos < position - 1:   # ✅ 停在插入位置的【前一个】�
 | 146 | LRU Cache | Medium | 哈希 + **双向链表**（对 LLM 应用岗尤其相关：缓存淘汰） |
 | 2 | Add Two Numbers | Medium | 进位模拟 + dummy |
 | 234 | Palindrome Linked List | Easy | 快慢找中点 + 反转后半段 |
+
+> 进度：**206 代码已通过自测**（三指针原地反转，$O(n)$ 时间 / $O(1)$ 空间），待补 `# 解法 / 时间复杂度 / 空间复杂度` 三行注释后标记为 ✅。
 
 ## 十一、面试可以这么说
 

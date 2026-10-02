@@ -16,5 +16,24 @@ sol = Solution()
 #         self.val = val
 #         self.next = next
 #
-# head = ListNode(1, ListNode(2, ListNode(2, ListNode(1))))
-# print(sol.isPalindrome(head))    # True
+#
+# def build(arr):
+#     """数组 -> 链表（力扣判题机就是这么把用例构造成输入的）"""
+#     dummy = ListNode()
+#     cur = dummy
+#     for v in arr:
+#         cur.next = ListNode(v)
+#         cur = cur.next
+#     return dummy.next
+#
+#
+# def to_array(head):
+#     """链表 -> 数组（方便和期望结果对照）"""
+#     out = []
+#     while head:
+#         out.append(head.val)
+#         head = head.next
+#     return out
+#
+# print(sol.isPalindrome(build([1, 2, 2, 1])))   # 期望 True
+# print(sol.isPalindrome(build([1, 2])))         # 期望 False
