@@ -6,7 +6,7 @@ class Solution(object):
         :rtype: Optional[ListNode]
         """
         # 解法：dummy 哨兵 + 尾指针
-        # 时间复杂度：O(n)
+        # 时间复杂度：O(m + n) # 两链表长度之和
         # 空间复杂度：O(1)
         # 这个方法按顺序串出新链表
         
